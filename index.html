@@ -1,159 +1,328 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>INSUCOM</title>
-  <meta name="apple-mobile-web-app-title" content="INSUCOM">
-  <link rel="icon" href="icon.png">
-  <link rel="apple-touch-icon" href="icon.png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      margin: 0;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: white;
-      padding: 18px;
-      min-height: 100vh;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .badge {
-      display: inline-block;
-      background: #22c55e;
-      color: #052e16;
-      padding: 8px 14px;
-      border-radius: 999px;
-      font-weight: bold;
-      margin-bottom: 14px;
-    }
-
-    h1 {
-      font-size: 38px;
-      margin: 0 0 10px 0;
-    }
-
-    .subtitle {
-      color: #cbd5e1;
-      font-size: 18px;
-      margin-bottom: 24px;
-    }
-
-    .grid {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .card {
-      background: rgba(255,255,255,0.09);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 22px;
-      padding: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 25px;
-    }
-
-    .card p {
-      color: #cbd5e1;
-      font-size: 18px;
-      line-height: 1.5;
-    }
-
-    .button {
-      display: block;
-      margin-top: 16px;
-      padding: 17px;
-      text-align: center;
-      border-radius: 14px;
-      background: #2563eb;
-      color: white;
-      font-weight: bold;
-      font-size: 18px;
-      text-decoration: none;
-    }
-
-    .green {
-      background: #16a34a;
-    }
-
-    .status {
-      color: #bbf7d0;
-      font-weight: bold;
-      font-size: 17px;
-    }
-
-    .footer {
-      margin-top: 25px;
-      text-align: center;
-      color: #94a3b8;
-      font-size: 14px;
-    }
-
-    @media (min-width: 700px) {
-      .grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .full {
-        grid-column: span 2;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSUCOM · Detector de Licitaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080C14;--surface:#0E1520;--surface2:#141D2E;--border:rgba(255,255,255,0.07);--accent:#00D4FF;--accent2:#7B61FF;--green:#00E5A0;--orange:#FF7A45;--text:#E8EDF5;--muted:#5A6680;--font-display:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;padding:20px;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.container{max-width:900px;margin:auto;position:relative;z-index:1;padding-bottom:60px;}
+header{padding:30px 0 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);margin-bottom:28px;}
+.logo-box{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.logo-text h1{font-family:var(--font-display);font-size:24px;font-weight:800;letter-spacing:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.logo-text p{font-size:12px;color:var(--muted);margin-top:2px;}
+.status-pill{margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);padding:5px 13px;border-radius:20px;font-size:12px;color:var(--green);}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+.stat .num{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--accent);}
+.stat .lbl{font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:0.5px;}
+.key-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:16px;}
+.key-box label{font-size:13px;color:var(--muted);display:block;margin-bottom:8px;}
+.key-row{display:flex;gap:8px;}
+.key-row input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:14px;font-family:var(--font-body);}
+.key-row input:focus{outline:none;border-color:var(--accent);}
+.btn-save{background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.3);color:var(--accent);border-radius:10px;padding:11px 18px;font-size:13px;font-weight:600;cursor:pointer;}
+.btn-save:hover{background:rgba(0,212,255,0.25);}
+.key-ok{font-size:12px;color:var(--green);margin-top:8px;display:none;}
+.search-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;margin-bottom:22px;}
+.search-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.search-row input{flex:1;min-width:180px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--text);font-size:14px;font-family:var(--font-body);}
+.search-row input:focus{outline:none;border-color:var(--accent);}
+.search-row input::placeholder{color:var(--muted);}
+.btn-buscar{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#080C14;border:none;border-radius:10px;padding:11px 22px;font-family:var(--font-display);font-size:14px;font-weight:700;cursor:pointer;}
+.btn-todos{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:11px 16px;font-size:13px;cursor:pointer;}
+.btn-todos:hover{border-color:var(--accent);color:var(--accent);}
+.tags{display:flex;gap:7px;flex-wrap:wrap;}
+.tag{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 13px;font-size:12px;color:var(--muted);cursor:pointer;}
+.tag:hover{border-color:var(--accent);color:var(--accent);}
+.loading{display:none;text-align:center;padding:40px;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{color:var(--muted);font-size:13px;}
+.error-box{background:rgba(255,122,69,0.1);border:1px solid rgba(255,122,69,0.2);border-radius:12px;padding:14px 18px;color:var(--orange);font-size:14px;margin-bottom:16px;display:none;}
+.resumen-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--muted);margin-bottom:16px;display:none;}
+.res-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;}
+.res-header strong{font-size:14px;color:var(--text);}
+.res-header span{font-size:12px;color:var(--muted);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:10px;transition:border-color 0.2s;}
+.card:hover{border-color:rgba(0,212,255,0.3);}
+.card-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.card-num{font-size:11px;color:var(--accent);font-weight:600;letter-spacing:0.4px;}
+.card-nombre{font-size:14px;font-weight:500;color:var(--text);margin-top:3px;line-height:1.4;}
+.badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;flex-shrink:0;}
+.badge-ok{background:rgba(0,229,160,0.1);color:var(--green);border:1px solid rgba(0,229,160,0.2);}
+.badge-warn{background:rgba(255,122,69,0.1);color:var(--orange);border:1px solid rgba(255,122,69,0.2);}
+.meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;}
+.meta-item{font-size:12px;color:var(--muted);}
+.meta-item span{color:var(--text);}
+.btn-ver{display:inline-flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:7px 14px;color:var(--accent);font-size:12px;font-weight:600;text-decoration:none;}
+.btn-ver:hover{border-color:var(--accent);}
+.empty{text-align:center;padding:60px 20px;display:none;}
+.empty .icon{font-size:44px;margin-bottom:14px;}
+.empty p{color:var(--muted);font-size:14px;}
+</style>
 </head>
-
 <body>
-  <div class="app">
-
-    <div class="badge">🤖 Robot activo</div>
-
-    <h1>Detector INSUCOM</h1>
-
-    <p class="subtitle">
-      Panel automático para revisar licitaciones vigentes y nuevas oportunidades.
-    </p>
-
-    <div class="grid">
-
-      <div class="card">
-        <h2>🆕 Nuevas licitaciones</h2>
-        <p>Revisá solamente oportunidades nuevas detectadas.</p>
-        <a class="button green" href="nuevas_licitaciones.html">Ver nuevas oportunidades</a>
-      </div>
-
-      <div class="card">
-        <h2>📋 Resultados generales</h2>
-        <p>Listado completo con enlaces directos a cada licitación.</p>
-        <a class="button" href="resultados_comprar.html">Ver análisis completo</a>
-      </div>
-
-      <div class="card full">
-        <h2>⚙️ Estado del sistema</h2>
-        <p>El detector se ejecuta automáticamente.</p>
-        <div class="status">✅ Sistema online · GitHub Pages activo</div>
-      </div>
-
+<div class="container">
+  <header>
+    <div class="logo-box">📋</div>
+    <div class="logo-text">
+      <h1>INSUCOM</h1>
+      <p>Detector de licitaciones · Argentina</p>
     </div>
+    <div class="status-pill"><div class="dot"></div>Sistema activo</div>
+  </header>
 
-    <div class="footer">
-      INSUCOM Tender Watch · Versión móvil PRO
-    </div>
-
+  <div class="stats-row">
+    <div class="stat"><div class="num" id="stat-total">—</div><div class="lbl">Encontradas</div></div>
+    <div class="stat"><div class="num" id="stat-vig" style="color:var(--green);">—</div><div class="lbl">Con apertura futura</div></div>
+    <div class="stat"><div class="num" id="stat-hora" style="color:var(--muted);font-size:18px;">—</div><div class="lbl">Última búsqueda</div></div>
   </div>
+
+  <div class="key-box">
+    <label>🔑 API Key de Anthropic (se guarda solo en tu navegador)</label>
+    <div class="key-row">
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." />
+      <button class="btn-save" onclick="guardarKey()">Guardar</button>
+    </div>
+    <div class="key-ok" id="keyOk">✅ API key guardada</div>
+  </div>
+
+  <div class="search-box">
+    <div class="search-row">
+      <input type="text" id="inputQ" placeholder="Ej: librería, tóner, notebook, mobiliario..." value="libreria" />
+      <button class="btn-buscar" onclick="buscar()">Buscar</button>
+      <button class="btn-todos" onclick="buscarTodos()">🔄 Buscar todo</button>
+    </div>
+    <div class="tags">
+      <span class="tag" onclick="setQ('libreria')">📚 Librería</span>
+      <span class="tag" onclick="setQ('papeleria')">📄 Papelería</span>
+      <span class="tag" onclick="setQ('toner impresora')">🖨 Tóner</span>
+      <span class="tag" onclick="setQ('notebook computadora')">💻 Notebooks</span>
+      <span class="tag" onclick="setQ('mobiliario oficina')">🪑 Mobiliario</span>
+      <span class="tag" onclick="setQ('utiles oficina')">✏️ Útiles</span>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Claude está buscando licitaciones en comprar.gob.ar...<br>Puede tardar 20-30 segundos.</p>
+  </div>
+
+  <div class="error-box" id="errorBox"></div>
+  <div class="resumen-box" id="resumenBox"></div>
+  <div id="contenedor"></div>
+  <div class="empty" id="emptyState"><div class="icon">🔎</div><p>No se encontraron licitaciones con apertura futura.</p></div>
+</div>
+
+<script>
+// FIX: la fecha de hoy se inyecta dinámicamente en el prompt
+function getFechaHoy() {
+  return new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function getSystemPrompt() {
+  const hoy = getFechaHoy();
+  // FIX: se agregó la fecha de hoy y reglas estrictas para excluir apertura pasada
+  return `Sos un experto en licitaciones públicas argentinas. Hoy es ${hoy}.
+
+Tu tarea es buscar en comprar.gob.ar y boletinoficial.gob.ar licitaciones que AÚN ESTÁN ABIERTAS para presentación de ofertas.
+
+REGLAS ESTRICTAS — seguí estas al pie de la letra:
+1. Solo incluí licitaciones cuya fecha de apertura de ofertas sea POSTERIOR a ${hoy} (fecha futura).
+2. EXCLUÍ cualquier proceso que tenga estado "apertura pasada", "en evaluación", "adjudicado", "adjudicada", "finalizado", "sin efecto", "desierta" o similar.
+3. Si no encontrás procesos con apertura futura, devolvé resultados vacíos — no inventes ni incluyas procesos vencidos.
+4. Priorizá procesos publicados o actualizados en los últimos 30 días.
+
+Devolvé SOLO JSON válido, sin texto extra, sin backticks, sin markdown:
+{"resultados":[{"numero":"...","nombre":"...","tipo":"...","apertura":"...","estado":"...","organismo":"...","link":"...","fuente":"..."}],"resumen":"...","total":0}
+
+Si no encontrás nada con apertura futura: {"resultados":[],"resumen":"No se encontraron licitaciones con apertura futura a la fecha de hoy (${hoy}).","total":0}`;
+}
+
+function guardarKey() {
+  const k = document.getElementById('apiKey').value.trim();
+  if (k) {
+    localStorage.setItem('insucom_key', k);
+    document.getElementById('keyOk').style.display = 'block';
+    setTimeout(() => document.getElementById('keyOk').style.display = 'none', 3000);
+  }
+}
+
+function getKey() {
+  return document.getElementById('apiKey').value.trim() || localStorage.getItem('insucom_key') || '';
+}
+
+function setQ(v) { document.getElementById('inputQ').value = v; }
+
+function mostrarLoading(v) { document.getElementById('loading').style.display = v ? 'block' : 'none'; }
+
+function mostrarError(msg) {
+  const el = document.getElementById('errorBox');
+  if (msg) { el.textContent = '⚠️ ' + msg; el.style.display = 'block'; }
+  else el.style.display = 'none';
+}
+
+function actualizarStats(data) {
+  document.getElementById('stat-total').textContent = data.resultados?.length ?? 0;
+  // FIX: contar solo los que tienen apertura futura (no pasada, no en evaluación)
+  const estadosExcluidos = ['adjudicado','adjudicada','finalizado','en evaluación','apertura pasada','sin efecto','desierta'];
+  const vig = data.resultados?.filter(r => !estadosExcluidos.some(s => (r.estado||'').toLowerCase().includes(s))).length ?? 0;
+  document.getElementById('stat-vig').textContent = vig;
+  document.getElementById('stat-hora').textContent = new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function renderResultados(data) {
+  const c = document.getElementById('contenedor');
+  const empty = document.getElementById('emptyState');
+  const resumen = document.getElementById('resumenBox');
+
+  actualizarStats(data);
+
+  if (data.resumen) { resumen.textContent = '💬 ' + data.resumen; resumen.style.display = 'block'; }
+
+  if (!data.resultados || data.resultados.length === 0) {
+    c.innerHTML = ''; empty.style.display = 'block'; return;
+  }
+  empty.style.display = 'none';
+
+  const header = `<div class="res-header"><strong>📋 ${data.resultados.length} licitaciones encontradas</strong><span>Fuente: comprar.gob.ar / boletinoficial.gob.ar</span></div>`;
+
+  const estadosExcluidos = ['adjudicado','adjudicada','finalizado','en evaluación','apertura pasada','sin efecto','desierta'];
+  const cards = data.resultados.map(r => {
+    const vigente = !estadosExcluidos.some(s => (r.estado||'').toLowerCase().includes(s));
+    const link = r.link?.startsWith('http') ? r.link : 'https://comprar.gob.ar';
+    return `<div class="card">
+      <div class="card-top">
+        <div style="flex:1">
+          <div class="card-num">N° ${r.numero||'—'}</div>
+          <div class="card-nombre">${r.nombre||'—'}</div>
+        </div>
+        <span class="badge ${vigente?'badge-ok':'badge-warn'}">${r.estado||'Vigente'}</span>
+      </div>
+      <div class="meta">
+        ${r.apertura?`<div class="meta-item">📅 <span>${r.apertura}</span></div>`:''}
+        ${r.tipo?`<div class="meta-item">🏷 <span>${r.tipo}</span></div>`:''}
+        ${r.organismo?`<div class="meta-item">🏛 <span>${r.organismo.substring(0,80)}</span></div>`:''}
+        ${r.fuente?`<div class="meta-item">🌐 <span>${r.fuente}</span></div>`:''}
+      </div>
+      <a href="${link}" target="_blank" class="btn-ver">🔗 Ver licitación</a>
+    </div>`;
+  }).join('');
+
+  c.innerHTML = header + cards;
+}
+
+async function llamarClaude(termino) {
+  const key = getKey();
+  if (!key) throw new Error('Pegá tu API key de Anthropic primero.');
+
+  const hoy = getFechaHoy();
+
+  // FIX: se incluye la fecha de hoy explícitamente en el mensaje del usuario
+  const messages = [{
+    role: 'user',
+    content: `Fecha de hoy: ${hoy}. Buscá en comprar.gob.ar y boletinoficial.gob.ar licitaciones relacionadas con "${termino}" cuya fecha de apertura de ofertas sea POSTERIOR a ${hoy}. No incluyas licitaciones con apertura pasada ni en evaluación. Devolvé JSON.`
+  }];
+
+  async function post(msgs) {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 3000,
+        system: getSystemPrompt(),  // FIX: prompt dinámico con fecha de hoy
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: msgs
+      })
+    });
+    return r.json();
+  }
+
+  let data = await post(messages);
+  if (data.error) throw new Error(data.error.message);
+
+  // FIX: el loop ahora pasa los resultados reales de búsqueda, no un string vacío.
+  // Con web_search_20250305, Anthropic ejecuta la búsqueda server-side y los resultados
+  // vienen embebidos en data.content. El cliente debe pasar todo data.content como
+  // mensaje assistant y solicitar a Claude que continúe procesando.
+  let ciclos = 0;
+  while (data.stop_reason === 'tool_use' && ciclos < 5) {
+    ciclos++;
+    // Incluir el mensaje completo del assistant (con resultados de búsqueda embebidos)
+    messages.push({ role: 'assistant', content: data.content });
+
+    // FIX: extraer tool_result blocks reales si los hay; si no, usar los tool_use ids
+    // para indicar que se procesaron (sin reemplazar con string vacío)
+    const toolUseBlocks = data.content.filter(b => b.type === 'tool_use');
+    const toolResultBlocks = data.content.filter(b => b.type === 'tool_result');
+
+    if (toolResultBlocks.length > 0) {
+      // Los resultados ya vienen embebidos en el contenido del assistant — solo continuar
+      messages.push({ role: 'user', content: `Procesá los resultados obtenidos y devolvé el JSON con las licitaciones con apertura posterior a ${hoy}.` });
+    } else if (toolUseBlocks.length > 0) {
+      // Pasar los tool_use ids para que Claude sepa que la búsqueda se completó
+      const acks = toolUseBlocks.map(b => ({
+        type: 'tool_result',
+        tool_use_id: b.id,
+        content: `Búsqueda completada. Filtrá solo resultados con apertura posterior a ${hoy}.`
+      }));
+      messages.push({ role: 'user', content: acks });
+    } else {
+      break;
+    }
+
+    data = await post(messages);
+    if (data.error) throw new Error(data.error.message);
+  }
+
+  const texto = (data.content||[]).filter(b => b.type==='text').map(b => b.text).join('');
+  if (!texto) throw new Error('Sin respuesta de Claude.');
+
+  const ini = texto.indexOf('{'), fin = texto.lastIndexOf('}') + 1;
+  if (ini < 0) throw new Error('Respuesta no es JSON: ' + texto.substring(0,200));
+  return JSON.parse(texto.substring(ini, fin));
+}
+
+async function buscar() {
+  const q = document.getElementById('inputQ').value.trim() || 'libreria';
+  mostrarLoading(true);
+  mostrarError(null);
+  document.getElementById('contenedor').innerHTML = '';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('resumenBox').style.display = 'none';
+  try {
+    const data = await llamarClaude(q);
+    renderResultados(data);
+  } catch(e) {
+    mostrarError(e.message);
+  } finally {
+    mostrarLoading(false);
+  }
+}
+
+async function buscarTodos() {
+  document.getElementById('inputQ').value = 'librería papelería tóner impresora notebook mobiliario';
+  await buscar();
+}
+
+document.getElementById('inputQ').addEventListener('keydown', e => { if(e.key==='Enter') buscar(); });
+
+// Cargar key guardada
+const savedKey = localStorage.getItem('insucom_key');
+if (savedKey) document.getElementById('apiKey').value = savedKey;
+</script>
 </body>
 </html>
