@@ -66,6 +66,11 @@ header{padding:30px 0 20px;display:flex;align-items:center;gap:14px;border-botto
 .empty{text-align:center;padding:60px 20px;display:none;}
 .empty .icon{font-size:44px;margin-bottom:14px;}
 .empty p{color:var(--muted);font-size:14px;}
+.cache-banner{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:16px;display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.cache-banner .cache-info{font-size:12px;color:var(--muted);}
+.cache-banner .cache-info strong{color:var(--green);}
+.btn-refresh{background:rgba(0,229,160,0.1);border:1px solid rgba(0,229,160,0.2);color:var(--green);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;}
+.btn-refresh:hover{background:rgba(0,229,160,0.2);}
 </style>
 </head>
 <body>
@@ -115,6 +120,10 @@ header{padding:30px 0 20px;display:flex;align-items:center;gap:14px;border-botto
     <p>Claude está buscando licitaciones en comprar.gob.ar...<br>Puede tardar 20-30 segundos.</p>
   </div>
 
+  <div class="cache-banner" id="cacheBanner">
+    <div class="cache-info">🤖 Resultados automáticos del <strong id="cacheDate">—</strong> · <span id="cacheCount">—</span> licitaciones con apertura futura</div>
+    <button class="btn-refresh" onclick="buscar()">🔄 Buscar ahora</button>
+  </div>
   <div class="error-box" id="errorBox"></div>
   <div class="resumen-box" id="resumenBox"></div>
   <div id="contenedor"></div>
@@ -323,6 +332,29 @@ document.getElementById('inputQ').addEventListener('keydown', e => { if(e.key===
 // Cargar key guardada
 const savedKey = localStorage.getItem('insucom_key');
 if (savedKey) document.getElementById('apiKey').value = savedKey;
+
+// Al cargar la página, intentar mostrar resultados automáticos guardados
+async function cargarResultadosCache() {
+  try {
+    const r = await fetch('resultados.json?t=' + Date.now());
+    if (!r.ok) return; // No existe el archivo aún, es normal al principio
+    const data = await r.json();
+    if (!data.resultados || data.resultados.length === 0) return;
+
+    // Mostrar banner con info del cache
+    const banner = document.getElementById('cacheBanner');
+    document.getElementById('cacheDate').textContent = data.ultima_actualizacion || data.fecha_busqueda || '—';
+    document.getElementById('cacheCount').textContent = data.total || data.resultados.length;
+    banner.style.display = 'flex';
+
+    // Mostrar los resultados guardados
+    renderResultados(data);
+  } catch(e) {
+    // Sin cache disponible, no pasa nada
+  }
+}
+
+cargarResultadosCache();
 </script>
 </body>
 </html>
